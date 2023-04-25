@@ -16,7 +16,7 @@ namespace AnarchyInHospital
 
     class Patient
     {
-        private string _name;       
+        private string _name;
 
         public Patient(string name, string surname, int age, string sickness)
         {
@@ -57,7 +57,7 @@ namespace AnarchyInHospital
             };
         }
 
-        public List<Patient> GetPatients() => new List<Patient>(_patients);        
+        public List<Patient> GetPatients() => new List<Patient>(_patients);
     }
 
     class Terminal
@@ -105,7 +105,7 @@ namespace AnarchyInHospital
                         break;
 
                     default:
-                        StorageOfErrors.ShowError(Errors.InvalidCommand);
+                        Console.WriteLine("Недопустимая команда");
                         break;
                 }
 
@@ -113,71 +113,29 @@ namespace AnarchyInHospital
             }
         }
 
-        private List<Patient> SortBySurname()
-        {
-            Console.Write("Введите фамилию больных: ");
+        private List<Patient> SortBySurname() =>
+            _hospital.GetPatients().OrderBy(patient => patient.Surname).ToList();        
 
-            string userInput = Console.ReadLine();
-
-            List<Patient> filteredPatients = _hospital.GetPatients().Where(patient => patient.Surname == userInput).ToList();
-
-            return filteredPatients;
-        }
-
-        private List<Patient> SortByAge()
-        {
-            List<Patient> filteredPatients = new List<Patient>();
-
-            Console.Write("Введите возраст больных: ");
-
-            if (int.TryParse(Console.ReadLine(), out int userInput) == false || userInput <= 0)
-                StorageOfErrors.ShowError(Errors.IncorrectInput);
-            else
-                filteredPatients = _hospital.GetPatients().Where(patient => patient.Age == userInput).ToList();            
-
-            return filteredPatients;
-        }
-
+        private List<Patient> SortByAge() =>
+            _hospital.GetPatients().OrderBy(patient => patient.Age).ToList();
+    
         private List<Patient> SortBySickness()
         {
             Console.Write("Введите болезнь больных: ");
 
             string userInput = Console.ReadLine().ToLower();
 
-            List<Patient> filteredPatients = _hospital.GetPatients().Where(patient => patient.Sickness == userInput).ToList();
-
-            return filteredPatients;
+            return _hospital.GetPatients().Where(patient => patient.Sickness == userInput).ToList();
         }
 
         private void ShowPatients(List<Patient> filteredPatients)
         {
             Console.WriteLine();
 
-            foreach (Patient patient in filteredPatients)            
+            foreach (Patient patient in filteredPatients)
                 patient.ShowInfo();
-            
+
             Console.ReadKey();
         }
-    }
-
-    class StorageOfErrors
-    {
-        public static void ShowError(Errors error)
-        {
-            Dictionary<Errors, string> errors = new Dictionary<Errors, string>
-            {
-                { Errors.InvalidCommand, "Недопустимая команда" },
-                { Errors.IncorrectInput, "Некорректный ввод" }
-            };
-
-            if (errors.ContainsKey(error))
-                Console.WriteLine(errors[error]);
-        }
-    }
-
-    enum Errors
-    {
-        InvalidCommand,
-        IncorrectInput
-    }
+    }    
 }
