@@ -58,6 +58,31 @@ namespace AnarchyInHospital
         }
 
         public List<Patient> GetPatients() => new List<Patient>(_patients);
+
+        public List<Patient> SortBySurname() =>
+            _patients.OrderBy(patient => patient.Surname).ToList();
+
+        public List<Patient> SortByAge() =>
+            _patients.OrderBy(patient => patient.Age).ToList();
+
+        public List<Patient> SortBySickness()
+        {
+            Console.Write("Введите болезнь больных: ");
+
+            string userInput = Console.ReadLine().ToLower();
+
+            return _patients.Where(patient => patient.Sickness == userInput).ToList();
+        }
+
+        public void ShowPatients(List<Patient> filteredPatients)
+        {
+            Console.WriteLine();
+
+            foreach (Patient patient in filteredPatients)
+                patient.ShowInfo();
+
+            Console.ReadKey();
+        }
     }
 
     class Terminal
@@ -89,15 +114,15 @@ namespace AnarchyInHospital
                 switch (userInput)
                 {
                     case CommandSortBySurname:
-                        filteredPatiens = SortBySurname();
+                        filteredPatiens = _hospital.SortBySurname();
                         break;
 
                     case CommandSortByAge:
-                        filteredPatiens = SortByAge();
+                        filteredPatiens = _hospital.SortByAge();
                         break;
 
                     case CommandSortBySickness:
-                        filteredPatiens = SortBySickness();
+                        filteredPatiens = _hospital.SortBySickness();
                         break;
 
                     case CommandExit:
@@ -109,33 +134,8 @@ namespace AnarchyInHospital
                         break;
                 }
 
-                ShowPatients(filteredPatiens);
+                _hospital.ShowPatients(filteredPatiens);
             }
-        }
-
-        private List<Patient> SortBySurname() =>
-            _hospital.GetPatients().OrderBy(patient => patient.Surname).ToList();        
-
-        private List<Patient> SortByAge() =>
-            _hospital.GetPatients().OrderBy(patient => patient.Age).ToList();
-    
-        private List<Patient> SortBySickness()
-        {
-            Console.Write("Введите болезнь больных: ");
-
-            string userInput = Console.ReadLine().ToLower();
-
-            return _hospital.GetPatients().Where(patient => patient.Sickness == userInput).ToList();
-        }
-
-        private void ShowPatients(List<Patient> filteredPatients)
-        {
-            Console.WriteLine();
-
-            foreach (Patient patient in filteredPatients)
-                patient.ShowInfo();
-
-            Console.ReadKey();
-        }
+        }  
     }    
 }
