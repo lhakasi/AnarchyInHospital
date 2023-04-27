@@ -57,15 +57,13 @@ namespace AnarchyInHospital
             };
         }
 
-        public List<Patient> GetPatients() => new List<Patient>(_patients);
-
         public List<Patient> SortBySurname() =>
             _patients.OrderBy(patient => patient.Surname).ToList();
 
         public List<Patient> SortByAge() =>
             _patients.OrderBy(patient => patient.Age).ToList();
 
-        public List<Patient> SortBySickness()
+        public List<Patient> FilterBySickness()
         {
             Console.Write("Введите болезнь больных: ");
 
@@ -122,7 +120,7 @@ namespace AnarchyInHospital
                         break;
 
                     case CommandSortBySickness:
-                        filteredPatiens = _hospital.SortBySickness();
+                        filteredPatiens = _hospital.FilterBySickness();
                         break;
 
                     case CommandExit:
